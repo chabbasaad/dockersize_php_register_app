@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app1:
+    build:
+      context: ./app1
+    container_name: app1-container
+    volumes:
+      - ./app1/src:/var/www/html
+
+    ports:
+      - "8081:80"
+    depends_on:
+      - db1
+
+  db1:
+    image: mysql:5.7
+    container_name: mysql1-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: authdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    volumes:
+      - db1_data:/var/lib/mysql
+      - ./init-authdb.sql:/docker-entrypoint-initdb.d/init-authdb.sql
+    ports:
+      - "3307:3306"
+
+volumes:
+  db1_data:
